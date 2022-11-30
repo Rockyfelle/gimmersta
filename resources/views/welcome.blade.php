@@ -15,27 +15,25 @@
 </head>
 
 <body class="antialiased">
-    @php
-        use GuzzleHttp\Client;
-        // Download Raw Products
-        $client = new Client();
-        $res = $client->get('http://jsonplaceholder.typicode.com/users');
-        $users = json_decode($res->getBody(), 2);
-        
-    @endphp
     <table>
         <tr>
-            <th>Name</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Street</th>
+            <th>Namn</th>
+            <th>Användarnamn</th>
+            <th>Mejl</th>
+            <th>Gata</th>
+            <th>Öppna</th>
         </tr>
         @foreach ($users as $user)
-            <tr onClick="load({{ $user['id'] }})" class="border border-primary" id={{ $user['id'] }}>
+            <tr>
                 <td>{{ $user['name'] }}</td>
                 <td>{{ $user['username'] }}</td>
                 <td>{{ $user['email'] }}</td>
-                <td>{{ $user['address']['street'] }}</td>
+                <td>{{ $user['street'] }}</td>
+                <td>
+                    <button onClick="load({{ $user['id'] }})" class="border border-primary" id={{ $user['id'] }}>
+                        Läs mer
+                    </button>
+                </td>
             <tr>
         @endforeach
     </table>
@@ -46,16 +44,7 @@
 
 <script>
     function load(id) {
-        const users = {!! json_encode($users) !!};
-        const user = users.find(x => x.id === id);
-        document.getElementById("user").innerHTML = `
-		<div>
-			<h2>${user.name}</h2>
-			<p><b>Username:</b> ${user.username}</p>
-			<p><b>Email:</b> ${user.email}</p>
-			<p><b>Full Address:</b> ${user.address.street}, ${user.address.suite}, ${user.address.city}, ${user.address.zipcode}</p>
-		</div>`;
-        window.history.pushState(user.name, 'Title', '/?id=' + id);
+        window.location.href = '/user/' + id;
     }
 </script>
 @if (request()->get('id'))
